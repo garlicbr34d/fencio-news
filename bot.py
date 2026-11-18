@@ -146,8 +146,13 @@ def process_article(item, source, seen, first_run, agent, now, webhook_url):
         seen.discard(link)
         if not isinstance(error, OpenRouterError):
             raise
-        print(f"[!] AI check failed for {link}: {type(error).__name__}")
-        if error.status_code in (404, 429):
+        print(
+            f"[!] AI check failed for {link}: "
+            f"{type(error).__name__}, "
+            f"status={getattr(error, 'status_code', None)}"
+        )
+        print(f"[!] API response: {getattr(error, 'body', None)}")
+        if error.status_code in (400, 401, 403, 404, 429):
             raise
         return
 
