@@ -23,7 +23,7 @@ class ArticleReview(BaseModel):
 
 def create_article_agent():
     model = ChatOpenRouter(
-        model=os.getenv("OPENROUTER_MODEL", "google/gemini-3.1-flash-lite"),
+        model="google/gemini-3.1-flash-lite",
         api_key=api_key,
         max_retries=0,
     )
