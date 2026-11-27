@@ -25,7 +25,15 @@ jobs:
           cache: pip
 
       - run: pip install -r requirements.txt
-
+      - name: Check OpenRouter key
+        env:
+          KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          echo "length: ${#KEY}"
+          [[ "$KEY" == sk-or-v1-* ]] && echo "prefix ok" || echo "prefix WRONG"
+          [[ "$KEY" =~ [[:space:]] ]] && echo "has whitespace" || echo "no whitespace"
+          curl -s https://openrouter.ai/api/v1/key -H "Authorization: Bearer $KEY"
+          
       - name: Run bot
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
@@ -43,4 +51,6 @@ jobs:
             git add seen.json
             git commit -m "update seen articles"
             git push
+      
+        
           fi
